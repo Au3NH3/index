@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="AuIII">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>not found</title>
+<style>
+body {
+	/*background: linear-gradient(to right, white 0 12.5%,
+		yellow 0 25%, cyan 0 37.5%, green 0 50%, magenta 0 62.5%,
+		red 0 75%, blue 0 87.5%, black 0 100%);*/
+	background-image:
+		linear-gradient(to right, white 0px, white 12.5%,
+		yellow 0px, yellow 25%, cyan 0px, cyan 37.5%,
+		green 0px, green 50%, magenta 0px, magenta 62.5%,
+		red 0px, red 75%, blue 0px, blue 87.5%, black 0px, black 100%),
+	linear-gradient(to right, white 50%, black 50%);
+}
+#txt {
+	font-size: 10vw;
+	text-align: center;
+	margin-top: 20vh;
+}
+p {
+	text-align:center;
+	font-size:25px;
+}
+#links{
+	width:max-content;
+	margin: 20vh auto 0 auto;
+}
+a{
+	text-decoration:none;
+}
+button{
+	cursor: pointer;
+	border:none;
+	background: none;
+}
+.link{
+	font-size: 30px;
+	color: blue;
+	/*display: inline;*/
+	margin: 0 10vw;
+	padding: 0;
+}
+.link:hover{
+	text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<div id='txt'>404 not found</div>
+<p>页面不存在</p>
+<div id='links'>
+	<button class='link' id='back' type='button'>back</button>
+	<a class='link' href='index.html'>home</a>
+</div>
+<script>
+var btn = document.querySelector('button')
+btn.addEventListener('click', ()=>{
+	history.back()
+}) 
+</script>
+</body>
+</html>

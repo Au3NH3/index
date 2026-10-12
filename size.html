@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--	
+<!--	version: 1.1.0, date: 2026.09.12,
+	log: 修改content水平居中方式，设置垂直居中
+
+<!--	version: 1.0.0, date: 2025.10.09, log:
+<!--	version: 0.1.0, date: 2023.08.08, log: create 
+-->
+<!-- <html lang='zh-CN'> -->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="AuIII">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1" />-->
+	<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />-->
+	<title>screen size</title>
+	<style>
+		body{
+			background: #eee;
+			text-align: center;
+		}
+		/* display:flex + align-items:center 设置内容垂直居中 */
+		/* display:flex + justify-content:center 设置内容水平居中 */
+		/* 或 width:fit-content + margin:auto 设置内容水平居中 */
+		#content {
+			min-height: calc(100vh - 10em);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			/*width: fit-content;
+			margin: 1em auto;*/
+		}
+		table {
+			border-collapse: collapse;
+		}
+		caption {
+			font-weight: bold;
+			font-size: larger;
+			padding: 0.5em 0;
+		}
+		tr:nth-child(even) td{
+			background-color: lightgrey;
+		}
+		th, td {
+			padding: 0.5em 1em;
+			border: 1px solid;
+		}
+		button {
+			font-size: unset;
+			/*width: 80%;*/
+			border: none;
+			background: #369;
+			color: white;
+			padding: 0.5em 5em;
+			border-radius: 0.5em;
+			cursor: pointer;
+		}
+		button:hover {
+			background: #569;
+			/*brightness(0.8);*/
+			/*font-weight: bold;*/
+			text-shadow: 1px 0 1px;
+		}
+		a{
+		  color:dodgerblue;
+		  text-decoration:none;
+		}
+		a:hover{
+		  text-decoration: underline;
+		}
+		#note{
+			margin: 1em 0;
+			font-weight: lighter;
+			/*font-style: italic;*/
+			font-size: smaller;
+			/*width: 80%;*/
+		}
+		#toaster {
+			/*visibility: hidden;*/
+			font-size: smaller;
+			font-weight: lighter;
+			margin-top: 1em;
+			/*padding: 0.5em;*/
+			/*width: 10em;*/
+			height: 2em;
+			color: white;
+		}
+		.toast {
+			/* 单行文字垂直居中: 设置 line-height 与 height 一致 */
+			line-height: 2em;
+			padding: 0 1em;
+			display: none;
+		}
+		.display {
+			display: block;
+			/*visibility: unset;*/
+		}
+		#rainbow {
+			margin: 1em 0;
+			height: 1em;
+			background:linear-gradient(to right, 
+				red,orange,yellow,green,blue,indigo,violet);
+		}
+		#footer {margin-bottom: 1em}
+	</style>
+	<style id='toast'></style>
+	<!-- <style id='mobile'></style> -->
+</head>
+<body>
+	<!-- <div id='conteiner'> -->
+	<div id='content'>
+		<table>
+		<caption >screen size</caption>
+		<tr><th>argument</th><th>value</th></tr>
+		<tr><td>screen.size</td>
+			<td data-attr='`${screen.width} * ${screen.height}`'></td></tr>
+		<tr><td>screen.availSize</td>
+			<td data-attr='`${screen.availWidth} * ${screen.availHeight}`'></td></tr>
+		<tr><td>outerSize</td>
+			<td data-attr='`${outerWidth} * ${outerHeight}`'></td></tr>
+		<tr><td>innerSize</td>
+			<td data-attr='`${innerWidth} * ${innerHeight}`'></td></tr>
+		<tr><td>documentSize</td>
+			<td data-attr='`${document.documentElement.clientWidth} * 
+				${document.documentElement.clientHeight}`'></td></tr>
+<!-- //<tr><td>bodySize</td><td>${document.body.clientWidth} *  -->
+<!-- //${document.body.clientHeight}</td></tr> -->
+		<tr><td>devicePixelRatio</td>
+			<td data-attr='devicePixelRatio'></td></tr>
+		<tr><td>inner/outer</td><td id='ratio'></td></tr>
+		</table>
+	<!-- <div> -->
+	<!-- </div> -->
+		<div id='note'><i>note</i> : "initial-scale=1" is not set in &lt;meta&gt;</div>
+		<button id='btn' type='button'>refresh</button>
+		<div id='toaster'>
+			<div class='toast'>size refreshed</div>
+			<div class='toast'>size not changed!</div>
+		</div>
+	<!-- </div> -->
+	</div>
+	<div id='rainbow'></div>
+	<!-- '&#2302;' stand for home '⌂' -->
+	<div class=''><a href='index.html'>&#x2302; home</a></div>
+	<div id='footer'>copyright &copy; <a href='https://github.com/au3nh3/'>au3nh3@github</a></div>
+
+<script>
+	const e_btn   = document.querySelector('#btn');
+	const e_attrs = document.querySelectorAll('[data-attr]');
+	const e_ratio = document.querySelector('#ratio');
+	const e_toaster = document.querySelector('#toaster');
+	const e_toast = document.querySelectorAll('.toast');
+	const e_css   = document.querySelector('#toast');
+	//const e_css   = document.querySelector('#mobile');
+	
+	// 由于未设置"initial-scale=1". 移动端字体放大
+	if (devicePixelRatio > 1 && innerWidth/outerWidth > 1.2){
+		document.body.style.fontSize = `${Math.round(devicePixelRatio*10)/10}em`
+		//let s_css = `body{font-size: ${Math.round(devicePixelRatio*10)/10}em} `;
+		//if (innerHeight / devicePixelRatio < 650) {
+		//	s_css += '#content{margin: 1em auto}'
+		//}
+		//e_css.textContent = s_css
+	}
+	
+	let tid;
+	function toast(i) {
+		if (tid) {
+			clearTimeout(tid);
+			tid = null;
+			e_toast[1-i].classList.remove('display');
+		}
+		let h = Math.round(360 * Math.random());
+		let s = Math.round(60 * Math.random() + 20);
+		let l = Math.round(60 * Math.random() + 20);
+		
+		e_toast[i].classList.add('display');
+		e_toaster.style.backgroundColor = `hsl(${h} ${s}% ${l}%)`;
+		//e_toaster.style.backgroundColor = `yellow`;
+		//e_css.innerHTML = `#toaster{background: hsl(${h} ${s} ${l});`;
+		tid = setTimeout( ()=> {
+			e_toast[i].classList.remove('display');
+			//e_toaster.style.backgroundColor = 'unset';
+			tid = null;
+		}, 1000)
+	}
+	
+	// 说明: 使用new Function替代eval.  调用: myeval(str)()
+	//function myeval(str) {
+	//	return new Function('return ' + str);
+	//}
+	let w0, h0;
+	function write_size() {
+		e_attrs.forEach( e => {
+			//let myeval = new Function('return ' + e.dataset.attr);
+			//e.textContent = myeval();
+			//声明(匿名)函数并立即执行: (function (arg)) (arg)
+			e.textContent = (new Function('return ' + e.dataset.attr))();
+		})
+		//最多保留2位小数
+		e_ratio.textContent = Math.round(innerWidth/outerWidth*100)/100;
+		w0=innerWidth;
+		h0=innerHeight;
+	}
+	write_size();
+	btn.addEventListener('click', () => {
+		if (w0==innerWidth && h0==innerHeight) {
+			toast(1);
+			//return
+		}
+		else {
+			write_size();
+			toast(0);
+		}
+	})
+</script>
+</body>
+</html>
